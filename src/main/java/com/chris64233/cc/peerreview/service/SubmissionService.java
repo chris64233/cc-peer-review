@@ -36,6 +36,9 @@ public class SubmissionService {
                 request.topics(),
                 authors,
                 request.requiredReviewers());
+        if (request.reviewRound() != null) {
+            submission.setReviewRound(request.reviewRound());
+        }
         submissionRepository.saveAndFlush(submission);
         return toDto(submission);
     }
@@ -68,6 +71,7 @@ public class SubmissionService {
                 Set.copyOf(submission.getTopics()),
                 authors,
                 submission.getRequiredReviewers(),
-                submission.getStatus().name());
+                submission.getStatus().name(),
+                submission.getReviewRound());
     }
 }

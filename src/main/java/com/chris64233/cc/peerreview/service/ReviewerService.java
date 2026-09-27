@@ -37,6 +37,9 @@ public class ReviewerService {
                 request.topics(),
                 request.maxAssignments(),
                 request.effectiveEnabled());
+        if (request.reviewDays() != null) {
+            reviewer.setReviewDays(request.reviewDays());
+        }
         reviewerRepository.saveAndFlush(reviewer);
         return toDto(reviewer);
     }
@@ -56,6 +59,9 @@ public class ReviewerService {
         }
         if (request.enabled() != null) {
             reviewer.setEnabled(request.enabled());
+        }
+        if (request.reviewDays() != null) {
+            reviewer.setReviewDays(request.reviewDays());
         }
         reviewerRepository.saveAndFlush(reviewer);
         return toDto(reviewer);
@@ -107,6 +113,7 @@ public class ReviewerService {
                 reviewer.getAffiliation(),
                 java.util.Set.copyOf(reviewer.getTopics()),
                 reviewer.getMaxAssignments(),
-                reviewer.isEnabled());
+                reviewer.isEnabled(),
+                reviewer.getReviewDays());
     }
 }

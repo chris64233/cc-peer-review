@@ -8,5 +8,6 @@ public record SubmissionDto(
         Set<String> topics,
         Set<AuthorRequest> authors,
         int requiredReviewers,
-        String status) {
+        String status,
+        int reviewRound) {
 }

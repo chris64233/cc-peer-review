@@ -24,6 +24,9 @@ import java.util.Set;
         uniqueConstraints = @UniqueConstraint(name = "uk_reviewer_code", columnNames = "code"))
 public class Reviewer {
 
+    /** 未显式指定时的默认周转天数。 */
+    public static final int DEFAULT_REVIEW_DAYS = 14;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,6 +47,10 @@ public class Reviewer {
 
     @Column(name = "max_assignments", nullable = false)
     private int maxAssignments;
+
+    /** 评审人承诺的周转天数，与轮次基础天数取较大者计算截止期。 */
+    @Column(name = "review_days", nullable = false)
+    private int reviewDays = DEFAULT_REVIEW_DAYS;
 
     @Column(nullable = false)
     private boolean enabled = true;
@@ -96,6 +103,14 @@ public class Reviewer {
 
     public void setMaxAssignments(int maxAssignments) {
         this.maxAssignments = maxAssignments;
+    }
+
+    public int getReviewDays() {
+        return reviewDays;
+    }
+
+    public void setReviewDays(int reviewDays) {
+        this.reviewDays = reviewDays;
     }
 
     public boolean isEnabled() {

@@ -8,5 +8,6 @@ public record ReviewerDto(
         String affiliation,
         Set<String> topics,
         int maxAssignments,
-        boolean enabled) {
+        boolean enabled,
+        int reviewDays) {
 }
