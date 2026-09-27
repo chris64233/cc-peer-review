@@ -9,6 +9,10 @@ public record AssignmentDto(
         String reviewerCode,
         String reviewerAffiliation,
         String status,
+        Instant dueAt,
+        String deadlineBasis,
+        Instant submittedAt,
+        String overdueReason,
         Instant createdAt,
         Instant updatedAt) {
 }

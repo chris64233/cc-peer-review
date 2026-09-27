@@ -11,9 +11,14 @@ public record ReviewerRequest(
         @NotBlank String affiliation,
         @NotEmpty Set<String> topics,
         @Min(1) int maxAssignments,
-        Boolean enabled) {
+        Boolean enabled,
+        @Min(0) Integer reviewDays) {
 
     public boolean effectiveEnabled() {
         return enabled == null || enabled;
+    }
+
+    public int effectiveReviewDays() {
+        return reviewDays == null ? 0 : reviewDays;
     }
 }

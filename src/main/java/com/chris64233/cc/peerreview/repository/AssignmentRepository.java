@@ -2,11 +2,19 @@ package com.chris64233.cc.peerreview.repository;
 
 import com.chris64233.cc.peerreview.domain.Assignment;
 import com.chris64233.cc.peerreview.domain.AssignmentStatus;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.QueryHint;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 
@@ -67,4 +75,32 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
             """)
     long countBySubmissionIdAndStatus(@Param("submissionId") Long submissionId,
                                       @Param("status") AssignmentStatus status);
+
+    @Query("""
+            select count(a) from Assignment a
+            where a.submission.id = :submissionId and a.status in :statuses
+            """)
+    long countBySubmissionIdAndStatusIn(@Param("submissionId") Long submissionId,
+                                        @Param("statuses") Collection<AssignmentStatus> statuses);
+
+    /**
+     * 对任务行加悲观写锁。提交、延期审批与逾期扫描都先锁稿件再锁任务，
+     * 保证同一任务的并发操作串行化，只能产生一个终态。
+     */
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @QueryHints(@QueryHint(name = "jakarta.persistence.lock.timeout", value = "5000"))
+    @Query("select a from Assignment a where a.id = :id")
+    Optional<Assignment> findByIdForUpdate(@Param("id") Long id);
+
+    /**
+     * 已到截止期仍未提交的有效任务 ID（按 ID 升序，限量一批）。
+     * 只读快照：具体任务是否真正逾期在处理事务内加锁后复检，因此扫描天然幂等、可重入。
+     */
+    @Query("""
+            select a.id from Assignment a
+            where a.status = com.chris64233.cc.peerreview.domain.AssignmentStatus.ACTIVE
+              and a.dueAt is not null and a.dueAt < :now
+            order by a.id asc
+            """)
+    List<Long> findOverdueIds(@Param("now") Instant now, Pageable pageable);
 }

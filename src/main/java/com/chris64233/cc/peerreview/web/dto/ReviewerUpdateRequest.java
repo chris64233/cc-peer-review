@@ -8,5 +8,6 @@ public record ReviewerUpdateRequest(
         String affiliation,
         Set<String> topics,
         @Min(1) Integer maxAssignments,
-        Boolean enabled) {
+        Boolean enabled,
+        @Min(0) Integer reviewDays) {
 }

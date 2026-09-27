@@ -7,5 +7,6 @@ public record SubmissionAssignmentDto(
         String submissionStatus,
         int requiredReviewers,
         long activeReviewers,
-        List<AssignmentDto> assignments) {
+        List<AssignmentDto> assignments,
+        List<AssignmentEventDto> events) {
 }

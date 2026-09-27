@@ -52,6 +52,10 @@ public class Submission {
     @Column(name = "required_reviewers", nullable = false)
     private int requiredReviewers;
 
+    /** 评审轮次：第 1 轮起，逐轮递增；截止期随轮次收紧。 */
+    @Column(name = "review_round", nullable = false)
+    private int round = 1;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
     private SubmissionStatus status = SubmissionStatus.PENDING;
@@ -103,6 +107,14 @@ public class Submission {
 
     public void setRequiredReviewers(int requiredReviewers) {
         this.requiredReviewers = requiredReviewers;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
     }
 
     public SubmissionStatus getStatus() {

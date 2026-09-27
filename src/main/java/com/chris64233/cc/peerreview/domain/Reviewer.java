@@ -45,6 +45,10 @@ public class Reviewer {
     @Column(name = "max_assignments", nullable = false)
     private int maxAssignments;
 
+    /** 评审人承诺的评审周期（天）；0 表示不设个人规则，截止期只按稿件轮次计算。 */
+    @Column(name = "review_days", nullable = false)
+    private int reviewDays = 0;
+
     @Column(nullable = false)
     private boolean enabled = true;
 
@@ -96,6 +100,14 @@ public class Reviewer {
 
     public void setMaxAssignments(int maxAssignments) {
         this.maxAssignments = maxAssignments;
+    }
+
+    public int getReviewDays() {
+        return reviewDays;
+    }
+
+    public void setReviewDays(int reviewDays) {
+        this.reviewDays = reviewDays;
     }
 
     public boolean isEnabled() {

@@ -11,5 +11,6 @@ public record SubmissionRequest(
         @NotBlank String manuscriptNo,
         @NotEmpty Set<String> topics,
         @NotEmpty @Valid Set<AuthorRequest> authors,
-        @Min(1) int requiredReviewers) {
+        @Min(1) int requiredReviewers,
+        @Min(1) Integer round) {
 }
